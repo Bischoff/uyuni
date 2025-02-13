@@ -12,7 +12,7 @@
 #- features/reposync/srv_disable_scheduled_reposync.feature
 #- features/reposync/srv_sync_channels.feature
 - features/reposync/srv_sync_products.feature
-#- features/reposync/srv_enable_sync_products.feature
+#- features/reposync/srv_mgr_sync_list_products.feature
 - features/reposync/srv_create_fake_channels.feature
 - features/reposync/srv_create_fake_repositories.feature
 - features/reposync/srv_sync_fake_channels.feature
