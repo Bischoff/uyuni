@@ -141,7 +141,8 @@ $quality_intelligence = QualityIntelligence.new if $quality_intelligence_mode
 
 # Define the current feature scope
 Before do |scenario|
-  $feature_scope = scenario.location.file.split(%r{(\.feature|/)})[-2]
+  current_feature_path = scenario.location.file
+  $feature_scope = current_feature_path.split(%r{(\.feature|/)})[-2]
 end
 
 # Embed a screenshot after each failed scenario
@@ -267,7 +268,16 @@ end
 AfterStep do
   next unless capybara_session_created?
 
-  log 'Timeout: Waiting AJAX transition' if has_css?('.senna-loading', wait: 0) && !has_no_css?('.senna-loading', wait: 30)
+  if has_css?('.senna-loading', wait: 0)
+    begin
+      log 'Timeout: Waiting AJAX transition' if !has_no_css?('.senna-loading', wait: 30)
+    rescue Selenium::WebDriver::Error::WebDriverError
+      log 'Tab crashed! We have to restart the web driver...'
+      Capybara.current_session.driver.quit
+      relog_and_visit_previous_url
+      log 'Web driver has been restarted'
+    end
+  end
 end
 
 Before do
